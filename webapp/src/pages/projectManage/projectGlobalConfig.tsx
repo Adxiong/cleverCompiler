@@ -4,7 +4,7 @@
  * @Author: Adxiong
  * @Date: 2021-08-27 16:13:10
  * @LastEditors: Adxiong
- * @LastEditTime: 2022-01-13 15:23:42
+ * @LastEditTime: 2022-01-27 16:35:47
  */
 import type { TemplateGlobalConfig, TemplateVersionGit } from "@/models/template";
 import type { ColumnProps  } from "antd/lib/table";
@@ -103,8 +103,8 @@ class ProjectGlobalConfig  extends React.Component<Props, States> {
     }
 
 
-    visableSourceData (configList: TemplateGlobalConfig[]): TemplateGlobalConfig[] {
-      return configList.filter( item => item.visable == 1)
+    visibleSourceData (configList: TemplateGlobalConfig[]): TemplateGlobalConfig[] {
+      return configList.filter( item => item.visible == 1)
     }
 
     onChangeFilterType (value: string) {
@@ -140,9 +140,9 @@ class ProjectGlobalConfig  extends React.Component<Props, States> {
         }
       })
     }
-    onSign (e, config: TemplateGlobalConfig) {
+    onSign (e: any, config: TemplateGlobalConfig) {
       let data = []
-      if (e.target.innerText == '取消标记') {
+      if (e.target.innerText == '关闭引用') {
         data = this.props.signArr.filter( item => item != config.id)
       }else {
         data = [...this.props.signArr, config.id]
@@ -243,7 +243,7 @@ class ProjectGlobalConfig  extends React.Component<Props, States> {
                       disabled={this.props.disabled}
                       onClick={() => {this.props.onUpdateConfigHidden([record.id])}}>隐藏</Button>
                   }
-                  <Button type="primary" onClick={(event) => this.onSign(event,record)}>{this.props.signArr.includes(record.id) ? "取消标记" : "标记"}</Button>
+                  <Button type="primary" onClick={(event) => this.onSign(event,record)}>{this.props.signArr.includes(record.id) ? "关闭引用" : "查看标记"}</Button>
 
                 </Space>
               </div>
@@ -321,7 +321,7 @@ class ProjectGlobalConfig  extends React.Component<Props, States> {
             bordered
             columns={columns}
             rowKey="id"
-            dataSource={this.visableSourceData(this.filterData(this.props.globalConfigList))}
+            dataSource={this.visibleSourceData(this.filterData(this.props.globalConfigList))}
             pagination={{
               showTotal(totle: number) {
                 return `总记录数${totle}`;

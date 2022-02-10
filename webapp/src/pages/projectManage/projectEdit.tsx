@@ -17,7 +17,7 @@ import { withRouter } from 'react-router';
 import { connect } from 'dva';
 import type { Customer } from "@/models/customer";
 import styles from './styles/projectEdit.less';
-import { compileType, EditMode, publicType, TypeMode, VersionStatus } from '@/models/common';
+import { compileType as CompileType, EditMode, publicType as PublicType, TypeMode, VersionStatus } from '@/models/common';
 import ProjectGlobalConfig from './projectGlobalConfig';
 import ProjectConfig from './projectConfig';
 import type { ConnectState } from '@/models/connect';
@@ -225,11 +225,11 @@ class ProjectEdit extends React.Component<Props, States> {
       const current = this.props.templateInfo.versionList.filter( item =>item.id === value)[0]     
       current.gitList.forEach(git => {
         git.configList.forEach(config => {
-          config.visable = Number(!config.isHidden)
+          config.visible = Number(!config.isHidden)
         })
       }) 
       current.globalConfigList.forEach( config => {
-        config.visable = Number(!config.isHidden)
+        config.visible = Number(!config.isHidden)
       })
       this.setState({
         templateVersionId: value,
@@ -505,7 +505,7 @@ class ProjectEdit extends React.Component<Props, States> {
                 onChange={this.onCompileTypeSelectChange}
               >
                 {
-                  compileType.map( item => {
+                  CompileType.map( item => {
                     return <Select.Option key={item.value} value={item.value}> {item.text} </Select.Option>
                   })
                 }
@@ -562,7 +562,7 @@ class ProjectEdit extends React.Component<Props, States> {
                 onChange={this.onRadioChange} 
                 value={this.state.publicType}>
                 {
-                  publicType.map( item => {
+                  PublicType.map( item => {
                     return <Radio key={item.value} value={item.value}>{item.text}</Radio>
                   })
                 }
