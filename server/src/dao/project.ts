@@ -116,7 +116,7 @@ class Project {
       return this.getProjectInfo(projectId)
     }
     catch (err){
-      await pool.rollback(conn)
+      pool.rollback(conn)
       logger.info(err)
       throw(err)
     }
@@ -128,12 +128,14 @@ class Project {
   }
 
   async insertConfig (conn, data: string[][]): Promise<void> {
-    const sql = `INSERT INTO project_config (id, target_value, template_config_id, global_config_id, project_git_id, is_hidden, visible) VALUES ?`
+    const sql = `INSERT INTO project_config (id, target_value, template_config_id, global_config_id, project_git_id, is_hidden, visable) VALUES ?`
     await pool.writeInTransaction(conn,sql, [data])
   }
   async insetGlobalConfig (conn, data: string[][]): Promise<void> {
-    const sql = `INSERT INTO project_global_config (id, project_id, template_global_config_id ,target_value,is_hidden, visible) VALUES ?`
-    await pool.writeInTransaction(conn,sql, [data])
+    const sql = `INSERT INTO project_global_config (id, project_id, template_global_config_id ,target_value,is_hidden, visable) VALUES (?, ?, ?, ?, ?, ?)`
+    for (let i = 0; i < data.length; i++) {
+      await pool.writeInTransaction(conn,sql, data[i])
+    }
   }
 
   async getProjectInfo (id: string): Promise<ProjectInfo>{
@@ -351,7 +353,7 @@ class Project {
       t.template_version_id as template_version_id,
       p.target_value as target_value,
       p.is_hidden as is_hidden,
-      p.visible,
+      p.visable,
       t.type as type
     FROM
       project_global_config as p
@@ -377,7 +379,7 @@ class Project {
       t.template_version_git_id as template_version_git_id,
       t.git_source_config_id as git_source_config_id,
       p.is_hidden as is_hidden,
-      p.visible,
+      p.visable,
       p.target_value as target_value   
     FROM
       project_config as p
